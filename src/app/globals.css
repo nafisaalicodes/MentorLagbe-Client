@@ -1,26 +1,180 @@
+
 @import "tailwindcss";
 
+/* ─── Design Tokens ──────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Core Palette */
+  --clr-primary: #273469;
+  --clr-primary-light: #7563E8;
+  --clr-primary-dark: #1B254F;
+   --primary-foreground: #ffffff;
+
+  /* Accent */
+  --clr-accent: #A99BF5;
+  --clr-accent-dark: #6552D5;
+
+  /* Backgrounds */
+  --clr-bg: #F8F9FC;
+  --clr-bg-alt: #F0F1F8;
+  --clr-card: #FFFFFF;
+
+  /* Borders */
+  --clr-border: #E7E9F0;
+  --clr-border-blue: #D9DDF0;
+
+  /* Text */
+  --clr-heading: #20263A;
+  --clr-body: #5F6678;
+  --clr-muted: #9299A8;
+  --clr-subtle: #A7ACB8;
+
+  /* Shadows */
+  --shadow-card:
+    0 1px 3px rgba(32, 38, 58, 0.05),
+    0 4px 16px rgba(32, 38, 58, 0.04);
+
+  --shadow-card-hover:
+    0 4px 12px rgba(39, 52, 105, 0.10),
+    0 8px 32px rgba(32, 38, 58, 0.08);
+
+  --shadow-btn:
+    0 2px 8px rgba(39, 52, 105, 0.20);
 }
 
+/* ─── Tailwind v4 Custom Theme ───────────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Colors */
+ --color-primary: var(--clr-primary);
+  --color-primary-light: var(--clr-primary-light);
+  --color-primary-dark: var(--clr-primary-dark);
+
+  /* Add this line */
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-accent: var(--clr-accent);
+  --color-accent-dark: var(--clr-accent-dark);
+
+  --color-base: var(--clr-bg);
+  --color-base-alt: var(--clr-bg-alt);
+  --color-card: var(--clr-card);
+
+  --color-border: var(--clr-border);
+  --color-border-blue: var(--clr-border-blue);
+
+  --color-heading: var(--clr-heading);
+  --color-body: var(--clr-body);
+  --color-muted: var(--clr-muted);
+  --color-subtle: var(--clr-subtle);
+
+  /* Font */
+  --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Base Styles ────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--clr-bg);
+  color: var(--clr-heading);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Reusable Utility Classes ───────────────── */
+
+/* Section Label */
+.section-label {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--clr-primary-light);
+  margin-bottom: 0.5rem;
+}
+
+/* Section Heading */
+.section-heading {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  color: var(--clr-heading);
+  line-height: 1.2;
+}
+
+/* Section Subtext */
+.section-subtext {
+  color: var(--clr-muted);
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+/* Primary Button */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--clr-primary);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: 999px;
+  transition: background-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: var(--shadow-btn);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--clr-primary-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(39, 52, 105, 0.25);
+}
+
+/* Outline Button */
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: transparent;
+  color: var(--clr-primary);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--clr-primary);
+  transition: background-color 0.2s, transform 0.15s;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-outline:hover {
+  background-color: rgba(39, 52, 105, 0.06);
+  transform: translateY(-1px);
+}
+
+/* Card */
+.card {
+  background: var(--clr-card);
+  border: 1px solid var(--clr-border);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
 }
