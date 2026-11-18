@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import { Check } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
@@ -6,18 +7,68 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 const plans = [
-  { name: "Student Free",  price: "৳0",     period: "/forever", description: "Perfect for getting started",
-    features: ["Browse all listings", "Apply to 3 tuitions/month", "Basic dashboard", "Email support"],
-    cta: "Get Started Free", href: "/sign-up",  highlight: false },
-  { name: "Student Pro",   price: "৳850",   period: "/month",   description: "For serious learners",
-    features: ["Unlimited applications", "Priority booking", "Save/bookmark tuitions", "Review & rating", "Priority support"],
-    cta: "Upgrade to Pro",   href: "/pricing",  highlight: true  },
-  { name: "Tutor Starter", price: "৳0",     period: "/forever", description: "Start teaching for free",
-    features: ["Post up to 2 listings", "Basic dashboard", "Accept/reject apps", "Basic analytics"],
-    cta: "Register as Tutor", href: "/sign-up",  highlight: false },
-  { name: "Tutor Pro",     price: "৳1,250", period: "/month",   description: "Scale your business",
-    features: ["Unlimited listings", "Verified badge", "Advanced analytics", "Priority in search", "24/7 support"],
-    cta: "Go Pro Now",        href: "/pricing",  highlight: false },
+  {
+    name: "Student Free",
+    price: "৳0",
+    period: "/forever",
+    description: "Perfect for getting started",
+    features: [
+      "Browse all listings",
+      "Apply to 3 tuitions/month",
+      "Basic dashboard",
+      "Email support",
+    ],
+    cta: "Get Started Free",
+    href: "/sign-up",
+    highlight: false,
+  },
+  {
+    name: "Student Pro",
+    price: "৳850",
+    period: "/month",
+    description: "For serious learners",
+    features: [
+      "Unlimited applications",
+      "Priority booking",
+      "Save/bookmark tuitions",
+      "Review & rating",
+      "Priority support",
+    ],
+    cta: "Upgrade to Pro",
+    href: "/pricing",
+    highlight: true,
+  },
+  {
+    name: "Tutor Starter",
+    price: "৳0",
+    period: "/forever",
+    description: "Start teaching for free",
+    features: [
+      "Post up to 2 listings",
+      "Basic dashboard",
+      "Accept/reject apps",
+      "Basic analytics",
+    ],
+    cta: "Register as Tutor",
+    href: "/sign-up",
+    highlight: false,
+  },
+  {
+    name: "Tutor Pro",
+    price: "৳1,250",
+    period: "/month",
+    description: "Scale your business",
+    features: [
+      "Unlimited listings",
+      "Verified badge",
+      "Advanced analytics",
+      "Priority in search",
+      "24/7 support",
+    ],
+    cta: "Go Pro Now",
+    href: "/pricing",
+    highlight: false,
+  },
 ];
 
 export default function PricingSection() {
@@ -26,52 +77,90 @@ export default function PricingSection() {
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         <div className="text-center mb-16 max-w-2xl mx-auto">
           <span className="section-label">Transparent Pricing</span>
-          <h2 className="section-heading">Simple, Predictable Plans for Everyone</h2>
-          <p className="section-subtext mt-4">Subscription prices in BDT. Tuition fees settled monthly by families.</p>
+          <h2 className="section-heading">
+            Simple, Predictable Plans for Everyone
+          </h2>
+          <p className="section-subtext mt-4">
+            Subscription prices in BDT. Tuition fees settled monthly by
+            families.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-start">
-          {plans.map(({ name, price, period, description, features, cta, href, highlight }) => (
-            <Card key={name} className={`flex flex-col relative ${highlight ? "border-primary shadow-lg scale-[1.02]" : "hover:shadow-md"} transition-all duration-200`}>
-              {highlight && (
-                <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full text-[11px] font-bold px-3.5 whitespace-nowrap bg-primary text-primary-foreground border-0">
-                  Most Popular
-                </Badge>
-              )}
+          {plans.map(
+            ({
+              name,
+              price,
+              period,
+              description,
+              features,
+              cta,
+              href,
+              highlight,
+            }) => (
+              <Card
+                key={name}
+                className={`flex flex-col relative ${
+                  highlight
+                    ? "border-primary shadow-lg scale-[1.02]"
+                    : "hover:shadow-md"
+                } transition-all duration-200`}
+              >
+                {highlight && (
+                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full text-[11px] font-bold px-3.5 whitespace-nowrap bg-primary text-primary-foreground border-0">
+                    Most Popular
+                  </Badge>
+                )}
 
-              <CardHeader className="pt-6 px-5 pb-0">
-                <h3 className="text-sm font-bold text-foreground">{name}</h3>
-                <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
-                <div className="flex items-baseline gap-1 mt-4">
-                  <span className="text-3xl font-extrabold text-foreground">{price}</span>
-                  <span className="text-xs text-muted-foreground">{period}</span>
-                </div>
-              </CardHeader>
+                <CardHeader className="pt-6 px-5 pb-0">
+                  <h3 className="text-sm font-bold text-foreground">
+                    {name}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {description}
+                  </p>
 
-              <Separator className="mx-5 w-auto my-4" />
+                  <div className="flex items-baseline gap-1 mt-4">
+                    <span className="text-3xl font-extrabold text-foreground">
+                      {price}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {period}
+                    </span>
+                  </div>
+                </CardHeader>
 
-              <CardContent className="px-5 pb-0 flex-1">
-                <ul className="space-y-2.5">
-                  {features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-xs">
-                      <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-primary" />
-                      <span className="text-muted-foreground">{f}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
+                <Separator className="mx-5 w-auto my-4" />
 
-              <CardFooter className="p-5 pt-5">
-                <Button
-                  className="w-full rounded-xl text-sm font-semibold"
-                  variant={highlight ? "default" : "outline"}
-                  render={<Link href={href} />}
-                >
-                  {cta}
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
+                <CardContent className="px-5 pb-0 flex-1">
+                  <ul className="space-y-2.5">
+                    {features.map((feature) => (
+                      <li
+                        key={feature}
+                        className="flex items-start gap-2 text-xs"
+                      >
+                        <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-primary" />
+                        <span className="text-muted-foreground">
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+
+                <CardFooter className="p-5 pt-5">
+                  <Button
+                    nativeButton={false}
+                    className="w-full rounded-xl text-sm font-semibold"
+                    variant={highlight ? "default" : "outline"}
+                    render={<Link href={href} />}
+                  >
+                    {cta}
+                  </Button>
+                </CardFooter>
+              </Card>
+            )
+          )}
         </div>
       </div>
     </section>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -22,15 +23,20 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-[68px]">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-white" strokeWidth={2.2} />
-            </div>
+     <Link href="/" className="flex items-center gap-2.5">
+  <Image
+    src="/logo.png"
+    alt="MentorLagbe Logo"
+    width={36}
+    height={36}
+    className="w-9 h-9 object-contain"
+    priority
+  />
 
-            <span className="text-lg font-extrabold tracking-tight text-foreground">
-              Mentor<span className="text-primary">Lagbe</span>
-            </span>
-          </Link>
+  <span className="text-lg font-extrabold tracking-tight text-foreground">
+    Mentor<span className="text-primary">Lagbe</span>
+  </span>
+</Link>
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-8">
