@@ -67,7 +67,7 @@ export default function Footer() {
               />
 
               <span className="text-lg font-extrabold tracking-tight text-white">
-                Mentor<span className="text-primary">Lagbe</span>
+                MentorLagbe
               </span>
             </Link>
 

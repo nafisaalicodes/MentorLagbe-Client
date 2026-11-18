@@ -1,6 +1,8 @@
 
 import Link from "next/link";
+import Image from "next/image";
 import { Search, Star, GraduationCap } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +11,7 @@ export default function HeroSection() {
   return (
     <section className="relative min-h-screen pt-28 pb-20 overflow-hidden bg-background">
 
-      {/* Subtle glow */}
+      {/* Subtle Glow */}
       <div
         className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full pointer-events-none opacity-[0.05]"
         style={{
@@ -22,8 +24,9 @@ export default function HeroSection() {
       <div className="relative max-w-7xl mx-auto px-5 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[calc(100vh-7rem)]">
 
-          {/* Left */}
+          {/* Left Section */}
           <div className="flex flex-col justify-center">
+
             <Badge
               variant="secondary"
               className="w-fit mb-7 rounded-full px-4 py-1.5 text-xs font-semibold gap-2 bg-primary/8 text-primary border-primary/15"
@@ -42,9 +45,9 @@ export default function HeroSection() {
               </span>
             </h1>
 
-            <p className="text-base leading-relaxed mb-9 max-w-md text-muted-foreground">
-              Connect with verified academic mentors for personalized 1-on-1
-              sessions and in-person tuition batches. Elevate grades and build
+            <p className="block w-full max-w-md text-base leading-7 mb-9 text-slate-600">
+              Connect with verified academic mentors for personalized 1 on 1
+              sessions and in person tuition batches. Elevate grades and build
               lasting learning confidence.
             </p>
 
@@ -72,7 +75,7 @@ export default function HeroSection() {
               </Button>
             </div>
 
-            {/* Search */}
+            {/* Search Bar */}
             <div className="bg-card border border-border rounded-2xl p-2 flex flex-col sm:flex-row items-stretch gap-2 max-w-md mb-9 shadow-sm">
               <div className="flex items-center gap-2 flex-1 px-3">
                 <Search className="w-4 h-4 shrink-0 text-muted-foreground" />
@@ -88,7 +91,7 @@ export default function HeroSection() {
               </Button>
             </div>
 
-            {/* Social proof */}
+            {/* Social Proof */}
             <div className="flex items-center gap-3.5">
               <div className="flex -space-x-2">
                 {["#7891B5", "#A9B8CC", "#5C76A0", "#C4D0DF"].map(
@@ -123,60 +126,51 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Right */}
-          <div className="hidden lg:flex flex-col items-center justify-center gap-6">
-            <div className="relative w-full max-w-sm">
-              <div className="rounded-3xl p-10 text-center relative overflow-hidden bg-primary">
-                <div
-                  className="absolute inset-0 opacity-10"
-                  style={{
-                    background:
-                      "radial-gradient(circle at 20% 80%, #fff 0%, transparent 50%)",
-                  }}
-                />
+          
+{/* Right Section */}
+<div className="hidden lg:flex items-center justify-center">
+  <div className="relative w-full max-w-md overflow-visible">
 
-                <div className="w-20 h-20 rounded-2xl bg-white/15 flex items-center justify-center mx-auto mb-5">
-                  <GraduationCap className="w-10 h-10 text-white" />
-                </div>
+    {/* Main Image Box */}
+    <div className="relative rounded-[28px] bg-[#273469] p-3 sm:p-4 shadow-2xl">
+      <Image
+        src="/hero.jpg"
+        alt="A student learning with a tutor"
+        width={600}
+        height={450}
+        priority
+        className="w-full aspect-[4/3] object-cover rounded-[20px]"
+      />
+    </div>
 
-                <h3 className="text-2xl font-extrabold text-white mb-1.5">
-                  MentorLagbe
-                </h3>
+    {/* Expert Tutors Card */}
+    <div className="absolute z-20 -top-5 -right-5 bg-white border border-slate-100 rounded-2xl px-5 py-3 shadow-lg">
+      <p className="text-xs font-medium text-slate-500">
+        Expert Tutors
+      </p>
+      <p className="text-2xl font-extrabold text-[#273469]">
+        500+
+      </p>
+    </div>
 
-                <p className="text-sm text-white/70">
-                  Your Academic Growth Partner
-                </p>
+    {/* Rating Card */}
+    <div className="absolute z-20 -bottom-5 -left-5 bg-[#7563E8] rounded-2xl px-5 py-3 shadow-lg">
+      <p className="text-xs font-medium text-white/80">
+        Average Rating
+      </p>
 
-                <Badge className="mt-5 rounded-full gap-1.5 text-xs font-medium bg-white/15 text-white border-0 hover:bg-white/20">
-                  <span className="w-1.5 h-1.5 rounded-full bg-white/80 animate-pulse" />
-                  Live Tutor Matching
-                </Badge>
-              </div>
+      <div className="flex items-center gap-1.5">
+        <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+        <span className="text-2xl font-extrabold text-white">
+          4.9
+        </span>
+      </div>
+    </div>
 
-              {/* Floating stats */}
-              <div className="absolute -top-4 -right-4 bg-card border border-border rounded-2xl px-4 py-3 shadow-md">
-                <p className="text-[11px] text-muted-foreground">
-                  Expert Tutors
-                </p>
-                <p className="text-xl font-extrabold text-foreground">
-                  500+
-                </p>
-              </div>
+  </div>
+</div>
 
-              <div className="absolute -bottom-4 -left-4 bg-accent border border-border rounded-2xl px-4 py-3 shadow-md">
-                <p className="text-[11px] font-medium text-foreground/60">
-                  Avg. Rating
-                </p>
 
-                <div className="flex items-center gap-1">
-                  <Star className="w-3.5 h-3.5 fill-current text-amber-500" />
-                  <span className="text-xl font-extrabold text-foreground">
-                    4.9
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
