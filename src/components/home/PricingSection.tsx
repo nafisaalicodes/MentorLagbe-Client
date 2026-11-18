@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 const plans = [
   {
     name: "Student Free",
-    price: "৳0",
+    price: "$0",
     period: "/forever",
     description: "Perfect for getting started",
     features: [
@@ -24,7 +24,7 @@ const plans = [
   },
   {
     name: "Student Pro",
-    price: "৳850",
+    price: "$10",
     period: "/month",
     description: "For serious learners",
     features: [
@@ -40,7 +40,7 @@ const plans = [
   },
   {
     name: "Tutor Starter",
-    price: "৳0",
+    price: "$0",
     period: "/forever",
     description: "Start teaching for free",
     features: [
@@ -55,7 +55,7 @@ const plans = [
   },
   {
     name: "Tutor Pro",
-    price: "৳1,250",
+    price: "$15",
     period: "/month",
     description: "Scale your business",
     features: [
@@ -67,7 +67,7 @@ const plans = [
     ],
     cta: "Go Pro Now",
     href: "/pricing",
-    highlight: false,
+    highlight: true,
   },
 ];
 
@@ -81,12 +81,12 @@ export default function PricingSection() {
             Simple, Predictable Plans for Everyone
           </h2>
           <p className="section-subtext mt-4">
-            Subscription prices in BDT. Tuition fees settled monthly by
+            Subscription prices in Dollar. Tuition fees settled monthly by
             families.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-stretch">
           {plans.map(
             ({
               name,
@@ -100,11 +100,11 @@ export default function PricingSection() {
             }) => (
               <Card
                 key={name}
-                className={`flex flex-col relative ${
-                  highlight
-                    ? "border-primary shadow-lg scale-[1.02]"
-                    : "hover:shadow-md"
-                } transition-all duration-200`}
+                className={`flex flex-col h-full ${
+  highlight
+    ? "border-primary shadow-lg"
+    : "hover:shadow-md"
+} transition-all duration-200`}
               >
                 {highlight && (
                   <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full text-[11px] font-bold px-3.5 whitespace-nowrap bg-primary text-primary-foreground border-0">
@@ -112,7 +112,7 @@ export default function PricingSection() {
                   </Badge>
                 )}
 
-                <CardHeader className="pt-6 px-5 pb-0">
+                <CardHeader className="pt-5 px-5 pb-0 min-h-0 gap-0">
                   <h3 className="text-sm font-bold text-foreground">
                     {name}
                   </h3>
@@ -120,7 +120,7 @@ export default function PricingSection() {
                     {description}
                   </p>
 
-                  <div className="flex items-baseline gap-1 mt-4">
+                  <div className="flex items-baseline gap-1 mt-2">
                     <span className="text-3xl font-extrabold text-foreground">
                       {price}
                     </span>
@@ -130,9 +130,9 @@ export default function PricingSection() {
                   </div>
                 </CardHeader>
 
-                <Separator className="mx-5 w-auto my-4" />
+                <Separator className="mx-5 w-auto my-3"  />
 
-                <CardContent className="px-5 pb-0 flex-1">
+                <CardContent className="px-5 pb-0  flex-1">
                   <ul className="space-y-2.5">
                     {features.map((feature) => (
                       <li
