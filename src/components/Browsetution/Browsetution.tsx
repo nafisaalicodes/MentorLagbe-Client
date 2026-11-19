@@ -46,28 +46,26 @@ const PAGE_SIZE = 9;
 
 const subjects = [
   "Mathematics",
+  "Higher Mathematics",
   "English",
   "Physics",
   "Chemistry",
   "Biology",
   "ICT",
   "Bangla",
+  "All Subjects",
+  "Programming",
+  "IELTS",
 ];
 
 const classLevels = [
-  "Class 1",
-  "Class 2",
-  "Class 3",
-  "Class 4",
+  "Class 3-5",
   "Class 5",
-  "Class 6",
-  "Class 7",
-  "Class 8",
-  "Class 9",
-  "Class 10",
-  "Class 11",
-  "Class 12",
-  "Admission",
+  "Class 6-8",
+  "Class 9-10",
+  "Class 11-12",
+  "University",
+  "Adult",
 ];
 
 const sortOptions = [
@@ -105,7 +103,9 @@ async function getTuitions(params: SearchParams): Promise<Tuition[]> {
 
     const result = await response.json();
 
-    return result.data || [];
+    if (Array.isArray(result)) return result;
+
+return result.data || result.tuitions || [];
   } catch (error) {
     console.error("Tuition Fetch Error:", error);
     return [];
@@ -293,7 +293,7 @@ export default async function BrowseTution({
                   name="search"
                   type="search"
                   defaultValue={params.search || ""}
-                  placeholder="Search by subject, class, or location (e.g. Higher Math, O-Level, Dhanmondi)..."
+                  placeholder="Search by tuition title or subject..."
                   className="w-full rounded-xl border border-border bg-card py-3.5 pl-11 pr-4 text-sm text-heading outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
                 />
               </div>
