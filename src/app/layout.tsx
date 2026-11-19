@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 import { cn } from "@/lib/utils";
+import { Toaster, toast } from "sonner";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={cn("h-full", "font-sans", geist.variable)}>
       <body className="min-h-full flex flex-col" style={{ background: "var(--clr-bg)" }}>
         <Navbar />
+        <Toaster position="top-right" richColors />
         <div className="flex-1">{children}</div>
         <Footer />
       </body>
