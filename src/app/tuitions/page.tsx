@@ -6,6 +6,8 @@ type SearchParams = {
   subject?: string;
   classLevel?: string;
   mode?: string;
+  sort?: string;
+  page?: string;
 };
 
 export default function TuitionsPage({
