@@ -91,6 +91,7 @@ export default function SignUpPage() {
     setLoading(true);
 
     try {
+      // Create account with Better Auth
       const { error } = await authClient.signUp.email({
         name: formData.name.trim(),
         email: formData.email.trim(),
@@ -104,6 +105,7 @@ export default function SignUpPage() {
       }
 
       toast.success("Account created successfully!");
+
       router.push("/sign-in");
     } catch (error: unknown) {
       console.error("Signup Error:", error);
@@ -115,7 +117,6 @@ export default function SignUpPage() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-base px-5 py-12">
-
       {/* Background Decoration */}
       <div
         aria-hidden="true"
@@ -129,7 +130,6 @@ export default function SignUpPage() {
 
       {/* Signup Card */}
       <div className="relative w-full max-w-[460px] rounded-3xl border border-border bg-card p-7 shadow-[0_1px_2px_rgba(32,38,58,0.04),0_24px_56px_-20px_rgba(39,52,105,0.28)] sm:p-9">
-
         {/* Logo */}
         <Link
           href="/"
@@ -168,7 +168,6 @@ export default function SignUpPage() {
           onSubmit={step === 1 ? handleContinue : handleSignup}
         >
           <div key={step}>
-
             {step === 1 ? (
               <>
                 <p className="mt-6 text-xs font-bold uppercase tracking-[0.16em] text-primary-light">
@@ -184,7 +183,6 @@ export default function SignUpPage() {
                 </p>
 
                 <div className="mt-7 space-y-5">
-
                   {/* Full Name */}
                   <div>
                     <label
@@ -368,7 +366,6 @@ export default function SignUpPage() {
 
           {/* Buttons */}
           <div className="mt-7 space-y-3">
-
             {step === 1 ? (
               <button
                 type="submit"

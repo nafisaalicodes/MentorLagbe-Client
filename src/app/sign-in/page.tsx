@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, type FormEvent } from "react";
@@ -28,6 +29,7 @@ export default function SignInPage() {
     setLoading(true);
 
     try {
+      // Step 1: Sign in with Better Auth
       const { error } = await authClient.signIn.email({
         email: email.trim(),
         password,
@@ -38,6 +40,34 @@ export default function SignInPage() {
         return;
       }
 
+      // Step 2: Get JWT token from Better Auth
+      const { data: tokenData, error: tokenError } =
+        await authClient.token();
+
+      if (tokenError || !tokenData?.token) {
+        toast.error("Login successful, but token retrieval failed");
+        return;
+      }
+
+      const token = tokenData.token;
+
+      // Step 3: Test protected backend API
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/protected`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        toast.error("Could not access protected API");
+        return;
+      }
+
+      // Step 4: Login successful
       toast.success("Login successful!");
 
       router.push("/");
@@ -78,9 +108,11 @@ export default function SignInPage() {
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary-light">
               Welcome back
             </p>
+
             <h1 className="mt-3 text-[1.75rem] font-extrabold leading-tight tracking-tight text-heading sm:text-3xl">
               Sign in to your account
             </h1>
+
             <p className="mt-2 text-[0.95rem] text-body">
               Enter your details to continue to MentorLagbe.
             </p>
@@ -93,6 +125,7 @@ export default function SignInPage() {
                 >
                   Email address
                 </label>
+
                 <input
                   id="email"
                   type="email"
@@ -113,6 +146,7 @@ export default function SignInPage() {
                 >
                   Password
                 </label>
+
                 <div className="relative">
                   <input
                     id="password"
@@ -125,6 +159,7 @@ export default function SignInPage() {
                     required
                     className="h-12 w-full rounded-xl border border-border bg-card pl-4 pr-12 text-[0.95rem] text-heading placeholder:text-subtle transition-all duration-200 outline-none focus:border-primary-light focus:ring-4 focus:ring-primary-light/15"
                   />
+
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
@@ -147,7 +182,10 @@ export default function SignInPage() {
                 disabled={loading}
                 className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-primary text-sm font-bold text-white shadow-[var(--shadow-btn)] transition-all duration-200 outline-none hover:-translate-y-0.5 hover:bg-primary-light focus-visible:ring-4 focus-visible:ring-primary-light/40 disabled:pointer-events-none disabled:opacity-60"
               >
-                {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+                {loading && (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                )}
+
                 {loading ? "Signing in..." : "Sign in"}
               </button>
             </form>
