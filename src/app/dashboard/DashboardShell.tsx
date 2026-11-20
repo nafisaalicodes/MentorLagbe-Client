@@ -164,11 +164,11 @@ export default function DashboardShell({
       <div className="flex h-[76px] items-center justify-between border-b border-slate-100 px-5">
         {!collapsed && (
           <Link
-            href="/"
-            className="text-xl font-black tracking-tight text-slate-900"
-          >
-            Mentor<span className="text-indigo-600">Lagbe.</span>
-          </Link>
+  href="/"
+  className="text-xl font-black tracking-tight text-foreground"
+>
+  Mentor<span className="text-primary">Lagbe</span>
+</Link>
         )}
 
         <button

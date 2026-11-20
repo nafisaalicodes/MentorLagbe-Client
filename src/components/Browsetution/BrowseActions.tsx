@@ -124,16 +124,7 @@ export function TuitionAlerts() {
         </button>
       </form>
 
-      <p className="mt-3 text-xs text-muted">
-        {confirmed ? (
-          <span className="inline-flex items-center gap-1.5 font-semibold text-primary">
-            <CircleCheck className="h-3.5 w-3.5" />
-            Alerts activated for {confirmed}. Watch your phone!
-          </span>
-        ) : (
-          "No spam ever. Unsubscribe anytime with 1 tap."
-        )}
-      </p>
+      
     </article>
   );
 }
