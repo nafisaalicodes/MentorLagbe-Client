@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { apiFetch } from "@/lib/api";
 import {
   ArrowRight,
   CalendarCheck,
@@ -175,7 +176,49 @@ const faqs = [
   },
 ];
 
-function PlanCard({ plan, role }: { plan: Plan; role: "tutor" | "student" }) {
+
+function PlanCard({
+  plan,
+  role,
+}: {
+  plan: Plan;
+  role: "tutor" | "student";
+}) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const isPro = plan.highlight;
+
+  const handleCheckout = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const result = await apiFetch(
+        "/api/payments/create-checkout-session",
+        {
+          method: "POST",
+        }
+      );
+
+      if (!result.url) {
+        throw new Error("Stripe checkout URL not found");
+      }
+
+      window.location.assign(result.url);
+    } catch (err) {
+      console.error("Stripe Checkout Error:", err);
+
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Payment could not be started"
+      );
+
+      setLoading(false);
+    }
+  };
+
   return (
     <article
       className={`relative flex h-full flex-col rounded-2xl border bg-card p-6 transition duration-300 md:p-7 ${
@@ -195,6 +238,7 @@ function PlanCard({ plan, role }: { plan: Plan; role: "tutor" | "student" }) {
           <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
           {plan.name}
         </span>
+
         <span className="text-xs text-muted">{plan.tag}</span>
       </div>
 
@@ -205,9 +249,13 @@ function PlanCard({ plan, role }: { plan: Plan; role: "tutor" | "student" }) {
         <span className="pb-2 text-sm text-muted">{plan.period}</span>
       </div>
 
-      <p className="mt-2 text-xs font-medium text-muted">{plan.note}</p>
+      <p className="mt-2 text-xs font-medium text-muted">
+        {plan.note}
+      </p>
 
-      <p className="mt-4 text-sm leading-6 text-body">{plan.intro}</p>
+      <p className="mt-4 text-sm leading-6 text-body">
+        {plan.intro}
+      </p>
 
       <div className="my-5 h-px bg-border" />
 
@@ -230,22 +278,39 @@ function PlanCard({ plan, role }: { plan: Plan; role: "tutor" | "student" }) {
         ))}
       </ul>
 
-      <Link
-        href={`/sign-up?role=${role}&plan=${plan.name
-          .toLowerCase()
-          .replace(/\s+/g, "-")}`}
-        className={`mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition hover:-translate-y-0.5 ${
-          plan.highlight
-            ? "bg-primary text-white shadow-[0_6px_20px_rgba(39,52,105,0.25)] hover:bg-primary-light"
-            : "border border-border bg-card text-heading hover:border-primary hover:text-primary"
-        }`}
-      >
-        {plan.cta}
-        <ArrowRight className="h-4 w-4" aria-hidden="true" />
-      </Link>
+      {error && (
+        <p className="mt-4 text-sm text-red-500">
+          {error}
+        </p>
+      )}
+
+      {isPro ? (
+        <button
+          type="button"
+          onClick={handleCheckout}
+          disabled={loading}
+          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white transition hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {loading ? "Redirecting to Stripe..." : plan.cta}
+          {!loading && (
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          )}
+        </button>
+      ) : (
+        <Link
+          href={`/sign-up?role=${role}&plan=${plan.name
+            .toLowerCase()
+            .replace(/\s+/g, "-")}`}
+          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 py-3 text-sm font-semibold text-heading transition hover:border-primary hover:text-primary"
+        >
+          {plan.cta}
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </Link>
+      )}
     </article>
   );
 }
+
 
 function PlansSection({
   label,
