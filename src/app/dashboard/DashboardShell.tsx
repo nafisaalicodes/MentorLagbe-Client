@@ -61,6 +61,21 @@ const roleLinks: Record<
       href: "/dashboard/admin",
       icon: "◫",
     },
+    {
+      label: "User Management",
+      href: "/dashboard/admin/users",
+      icon: "◉",
+    },
+    {
+      label: "Tuition Approvals",
+      href: "/dashboard/admin/tuitions",
+      icon: "▤",
+    },
+    {
+      label: "Transactions",
+      href: "/dashboard/admin/transactions",
+      icon: "৳",
+    },
   ],
 };
 
