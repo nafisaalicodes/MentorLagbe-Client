@@ -5,7 +5,9 @@ import {
 } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
-  baseURL: "http://localhost:5000",
+  baseURL:
+    process.env.NEXT_PUBLIC_API_URL ||
+    "http://localhost:5000",
 
   plugins: [
     jwtClient(),
@@ -14,6 +16,11 @@ export const authClient = createAuthClient({
       user: {
         role: {
           type: "string",
+           required: false,
+        },
+        subscriptionPlan: {
+          type: "string",
+             required: false,
         },
       },
     }),

@@ -67,11 +67,29 @@ export default function SignInPage() {
         return;
       }
 
-      // Step 4: Login successful
-      toast.success("Login successful!");
+     // Step 4: Get logged-in user role
+const { data: sessionData, error: sessionError } =
+  await authClient.getSession();
 
-      router.push("/");
-      router.refresh();
+if (sessionError || !sessionData?.user) {
+  toast.error("Could not retrieve user information");
+  return;
+}
+
+const role = sessionData.user.role;
+
+// Redirect according to user role
+toast.success("Login successful!");
+
+if (role === "tutor") {
+  router.replace("/dashboard/tutor");
+} else if (role === "admin") {
+  router.replace("/dashboard/admin");
+} else {
+  router.replace("/dashboard/student");
+}
+
+router.refresh();
     } catch (error: unknown) {
       console.error("Signin Error:", error);
       toast.error("Something went wrong. Please try again.");

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -21,20 +20,57 @@ const roleLinks: Record<
   { label: string; href: string; icon: string }[]
 > = {
   student: [
-    { label: "Overview", href: "/dashboard/student", icon: "◫" },
+    {
+      label: "Overview",
+      href: "/dashboard/student",
+      icon: "◫",
+    },
     {
       label: "My Applications",
       href: "/dashboard/student/my-applications",
       icon: "▤",
     },
   ],
+
   tutor: [
-    { label: "Overview", href: "/dashboard/tutor", icon: "◫" },
+    {
+      label: "Overview",
+      href: "/dashboard/tutor",
+      icon: "◫",
+    },
+    {
+      label: "Post Tuition",
+      href: "/dashboard/tutor/post-tuition",
+      icon: "+",
+    },
+    {
+      label: "My Tuitions",
+      href: "/dashboard/tutor/my-tuitions",
+      icon: "▤",
+    },
+    {
+      label: "Applicants",
+      href: "/dashboard/tutor/applicants",
+      icon: "♙",
+    },
   ],
+
   admin: [
-    { label: "Overview", href: "/dashboard/admin", icon: "◫" },
+    {
+      label: "Overview",
+      href: "/dashboard/admin",
+      icon: "◫",
+    },
   ],
 };
+
+function isValidRole(role: unknown): role is Role {
+  return (
+    role === "student" ||
+    role === "tutor" ||
+    role === "admin"
+  );
+}
 
 export default function DashboardShell({
   children,
@@ -52,6 +88,14 @@ export default function DashboardShell({
   const user = session?.user as DashboardUser | undefined;
   const role = user?.role;
 
+  const validRole = isValidRole(role);
+
+  const isAuthorized =
+    !isPending && !!user && validRole;
+
+  const links = validRole ? roleLinks[role] : [];
+
+  // Authentication and role validation
   useEffect(() => {
     if (isPending) return;
 
@@ -60,7 +104,7 @@ export default function DashboardShell({
       return;
     }
 
-    if (!role || !["student", "tutor", "admin"].includes(role)) {
+    if (!isValidRole(role)) {
       router.replace("/");
       return;
     }
@@ -75,36 +119,33 @@ export default function DashboardShell({
     }
   }, [isPending, user, role, pathname, router]);
 
-  if (isPending || !user || !role) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50">
-        <div className="text-center">
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-indigo-100 border-t-indigo-600" />
-          <p className="mt-4 text-sm font-medium text-slate-500">
-            Preparing your dashboard...
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  const links = roleLinks[role];
-
+  // Logout
   const handleLogout = async () => {
-    await authClient.signOut();
-    router.replace("/login");
+    try {
+      await authClient.signOut();
+      router.replace("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
-  const initials = (user.name || user.email || "U")
+  // User initials
+  const initials = (
+    user?.name ||
+    user?.email ||
+    "U"
+  )
     .charAt(0)
     .toUpperCase();
 
+  // Sidebar
   const sidebar = (
     <aside
       className={`flex h-full flex-col border-r border-slate-200 bg-white transition-all duration-300 ${
         collapsed ? "w-[84px]" : "w-[270px]"
       }`}
     >
+      {/* Sidebar Header */}
       <div className="flex h-[76px] items-center justify-between border-b border-slate-100 px-5">
         {!collapsed && (
           <Link
@@ -130,6 +171,7 @@ export default function DashboardShell({
         )}
       </div>
 
+      {/* Navigation */}
       <div className="px-4 py-6">
         {!collapsed && (
           <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
@@ -159,13 +201,17 @@ export default function DashboardShell({
                 <span className="w-6 text-center text-lg">
                   {link.icon}
                 </span>
-                {!collapsed && <span>{link.label}</span>}
+
+                {!collapsed && (
+                  <span>{link.label}</span>
+                )}
               </Link>
             );
           })}
         </nav>
       </div>
 
+      {/* Sidebar Footer */}
       <div className="mt-auto p-4">
         <div
           className={`rounded-2xl bg-slate-50 p-3 ${
@@ -183,7 +229,10 @@ export default function DashboardShell({
             title={collapsed ? "Sign out" : undefined}
             className="flex w-full items-center gap-3 rounded-xl px-2 py-2.5 text-sm font-semibold text-rose-600 transition hover:bg-rose-50"
           >
-            <span className="w-6 text-center text-lg">↪</span>
+            <span className="w-6 text-center text-lg">
+              ↪
+            </span>
+
             {!collapsed && "Sign out"}
           </button>
         </div>
@@ -218,7 +267,9 @@ export default function DashboardShell({
         {/* Main Content */}
         <div
           className={`flex min-h-screen min-w-0 flex-1 flex-col transition-all duration-300 ${
-            collapsed ? "lg:ml-[84px]" : "lg:ml-[270px]"
+            collapsed
+              ? "lg:ml-[84px]"
+              : "lg:ml-[270px]"
           }`}
         >
           {/* Topbar */}
@@ -234,8 +285,9 @@ export default function DashboardShell({
 
               <div>
                 <p className="text-sm font-bold capitalize text-slate-900">
-                  {role} workspace
+                  {role ?? "Account"} workspace
                 </p>
+
                 <p className="hidden text-xs text-slate-400 sm:block">
                   Manage your learning journey with MentorLagbe
                 </p>
@@ -246,14 +298,15 @@ export default function DashboardShell({
             <div className="flex items-center gap-3">
               <div className="hidden text-right sm:block">
                 <p className="text-sm font-bold text-slate-900">
-                  {user.name || "User"}
+                  {user?.name || "User"}
                 </p>
+
                 <p className="text-xs capitalize text-slate-500">
-                  {role}
+                  {role ?? ""}
                 </p>
               </div>
 
-              {user.image ? (
+              {user?.image ? (
                 <Image
                   src={user.image}
                   alt="Profile"
@@ -271,11 +324,36 @@ export default function DashboardShell({
           </header>
 
           {/* Dashboard Content */}
-          <main className="mx-auto w-full max-w-[1600px] flex-1 p-4 sm:p-7 lg:p-9">
-            {children}
+          <main className="relative mx-auto w-full max-w-[1600px] flex-1 p-4 sm:p-7 lg:p-9">
+
+            {/* Children always remain in the render tree */}
+            <div
+              className={
+                isAuthorized
+                  ? ""
+                  : "invisible pointer-events-none"
+              }
+              aria-hidden={!isAuthorized}
+            >
+              {children}
+            </div>
+
+            {/* Authentication Loading */}
+            {!isAuthorized && (
+              <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-50">
+                <div className="text-center">
+                  <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-indigo-100 border-t-indigo-600" />
+
+                  <p className="mt-4 text-sm font-medium text-slate-500">
+                    Preparing your dashboard...
+                  </p>
+                </div>
+              </div>
+            )}
+
           </main>
 
-          {/* Dashboard Copyright Footer */}
+          {/* Copyright Footer */}
           <footer className="mt-auto border-t border-slate-200 bg-white px-6 py-5 text-center">
             <p className="text-xs font-medium text-slate-500">
               © 2026 MentorLagbe. All rights reserved.

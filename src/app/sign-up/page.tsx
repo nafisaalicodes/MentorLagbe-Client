@@ -197,7 +197,7 @@ export default function SignUpPage() {
                       type="text"
                       name="name"
                       autoComplete="name"
-                      placeholder="e.g. Nafisa Rahman"
+                      placeholder="e.g.Nafisa"
                       value={formData.name}
                       onChange={handleChange}
                       required
