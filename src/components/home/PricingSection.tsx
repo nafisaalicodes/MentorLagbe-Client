@@ -3,6 +3,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Check } from "lucide-react";
 
 import { apiFetch } from "@/lib/api";
@@ -107,11 +108,19 @@ const handleCheckout = async (planName: string) => {
     window.location.href = result.url;
 
   } catch (error) {
-    setError(
+    const message =
       error instanceof Error
         ? error.message
-        : "Something went wrong. Please try again."
-    );
+        : "Something went wrong. Please try again.";
+
+    setError(message);
+    toast.error(message);
+
+    // Not signed in yet — send the user to the sign in page.
+    if (/login|sign in/i.test(message)) {
+      window.location.href = "/sign-in";
+      return;
+    }
 
     setLoadingPlan(null);
   }

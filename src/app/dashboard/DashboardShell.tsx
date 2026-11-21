@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 
 type Role = "student" | "tutor" | "admin";
@@ -30,6 +31,11 @@ const roleLinks: Record<
       href: "/dashboard/student/my-applications",
       icon: "▤",
     },
+    {
+      label: "Update Profile",
+      href: "/dashboard/profile",
+      icon: "◉",
+    },
   ],
 
   tutor: [
@@ -53,6 +59,11 @@ const roleLinks: Record<
       href: "/dashboard/tutor/applicants",
       icon: "♙",
     },
+    {
+      label: "Update Profile",
+      href: "/dashboard/profile",
+      icon: "◉",
+    },
   ],
 
   admin: [
@@ -75,6 +86,11 @@ const roleLinks: Record<
       label: "Transactions",
       href: "/dashboard/admin/transactions",
       icon: "৳",
+    },
+    {
+      label: "Update Profile",
+      href: "/dashboard/profile",
+      icon: "◉",
     },
   ],
 };
@@ -115,7 +131,7 @@ export default function DashboardShell({
     if (isPending) return;
 
     if (!user) {
-      router.replace("/login");
+      router.replace("/sign-in");
       return;
     }
 
@@ -124,9 +140,13 @@ export default function DashboardShell({
       return;
     }
 
+    // Shared routes are accessible for every role (e.g. Update Profile).
+    const isSharedRoute = pathname === "/dashboard/profile";
+
     const allowedPrefix = `/dashboard/${role}`;
 
     if (
+      !isSharedRoute &&
       pathname !== allowedPrefix &&
       !pathname.startsWith(`${allowedPrefix}/`)
     ) {
@@ -137,10 +157,18 @@ export default function DashboardShell({
   // Logout
   const handleLogout = async () => {
     try {
-      await authClient.signOut();
-      router.replace("/login");
+      const { error } = await authClient.signOut();
+
+      if (error) {
+        toast.error(error.message || "Sign out failed. Please try again.");
+        return;
+      }
+
+      toast.success("Signed out successfully");
+      router.replace("/sign-in");
     } catch (error) {
       console.error("Logout failed:", error);
+      toast.error("Sign out failed. Please try again.");
     }
   };
 
@@ -310,7 +338,11 @@ export default function DashboardShell({
             </div>
 
             {/* User Profile */}
-            <div className="flex items-center gap-3">
+            <Link
+              href="/dashboard/profile"
+              title="Update profile"
+              className="flex items-center gap-3 rounded-xl px-2 py-1.5 transition hover:bg-slate-100"
+            >
               <div className="hidden text-right sm:block">
                 <p className="text-sm font-bold text-slate-900">
                   {user?.name || "User"}
@@ -335,7 +367,7 @@ export default function DashboardShell({
                   {initials}
                 </div>
               )}
-            </div>
+            </Link>
           </header>
 
           {/* Dashboard Content */}

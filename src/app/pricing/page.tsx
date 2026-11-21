@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 import { apiFetch } from "@/lib/api";
 import {
   ArrowRight,
@@ -209,11 +210,19 @@ function PlanCard({
     } catch (err) {
       console.error("Stripe Checkout Error:", err);
 
-      setError(
+      const message =
         err instanceof Error
           ? err.message
-          : "Payment could not be started"
-      );
+          : "Payment could not be started";
+
+      setError(message);
+      toast.error(message);
+
+      // Not signed in yet — send the user to the sign in page.
+      if (/login|sign in/i.test(message)) {
+        window.location.assign("/sign-in");
+        return;
+      }
 
       setLoading(false);
     }

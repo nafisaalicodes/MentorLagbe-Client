@@ -1,6 +1,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import Form from "next/form";
 import { Search, Star, GraduationCap } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -57,7 +58,7 @@ export default function HeroSection() {
                 size="lg"
                 className="rounded-full gap-2 px-6 shadow-sm"
                 nativeButton={false}
-                render={<Link href="/browse-tuitions" />}
+                render={<Link href="/tuitions" />}
               >
                 <Search className="w-4 h-4" />
                 Explore Tuitions
@@ -76,20 +77,24 @@ export default function HeroSection() {
             </div>
 
             {/* Search Bar */}
-            <div className="bg-card border border-border rounded-2xl p-2 flex flex-col sm:flex-row items-stretch gap-2 max-w-md mb-9 shadow-sm">
+            <Form
+              action="/tuitions"
+              className="bg-card border border-border rounded-2xl p-2 flex flex-col sm:flex-row items-stretch gap-2 max-w-md mb-9 shadow-sm"
+            >
               <div className="flex items-center gap-2 flex-1 px-3">
                 <Search className="w-4 h-4 shrink-0 text-muted-foreground" />
 
                 <Input
+                  name="search"
                   placeholder="Search — Physics, Math, IELTS…"
                   className="border-0 shadow-none bg-transparent focus-visible:ring-0 text-sm h-auto py-1.5 px-0"
                 />
               </div>
 
-              <Button className="rounded-xl text-sm px-5" size="sm">
+              <Button type="submit" className="rounded-xl text-sm px-5" size="sm">
                 Search
               </Button>
-            </div>
+            </Form>
 
             {/* Social Proof */}
             <div className="flex items-center gap-3.5">

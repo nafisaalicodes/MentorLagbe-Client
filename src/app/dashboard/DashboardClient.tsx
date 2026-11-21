@@ -13,7 +13,7 @@ export default function DashboardClient() {
     if (isPending) return;
 
     if (!session?.user) {
-      router.replace("/login");
+      router.replace("/sign-in");
       return;
     }
 

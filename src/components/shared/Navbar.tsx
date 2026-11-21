@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Menu, X, UserRound, LayoutDashboard, LogOut, Settings } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
@@ -30,12 +31,20 @@ export default function Navbar() {
 
   const handleSignOut = async () => {
     try {
-      await authClient.signOut();
+      const { error } = await authClient.signOut();
+
+      if (error) {
+        toast.error(error.message || "Sign out failed. Please try again.");
+        return;
+      }
+
       setOpen(false);
+      toast.success("Signed out successfully");
       router.push("/");
       router.refresh();
     } catch (error) {
       console.error("Sign out failed:", error);
+      toast.error("Sign out failed. Please try again.");
     }
   };
 
@@ -50,7 +59,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5">
             <Image
-              src="/logo.png"
+              src="/Logo.png"
               alt="MentorLagbe Logo"
               width={36}
               height={36}
@@ -85,7 +94,7 @@ export default function Navbar() {
 
                 {/* User Profile */}
                 <Link
-                  href="/profile"
+                  href="/dashboard/profile"
                   className="flex items-center gap-2.5 hover:opacity-80 transition-opacity"
                 >
                   {userImage ? (
@@ -130,10 +139,10 @@ export default function Navbar() {
                   variant="ghost"
                   size="sm"
                   nativeButton={false}
-                  render={<Link href="/Profile" />}
+                  render={<Link href="/dashboard/profile" />}
                 >
                   <Settings className="w-4 h-4 mr-1" />
-                  Profile
+                  Update Profile
                 </Button>
 
                 {/* Sign Out */}
@@ -244,7 +253,7 @@ export default function Navbar() {
                 </Link>
 
                 <Link
-                  href="/Profile"
+                  href="/dashboard/profile"
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-2 py-2 text-sm font-medium"
                 >

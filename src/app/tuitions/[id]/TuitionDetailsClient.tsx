@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 
 type Tuition = {
@@ -15,9 +16,11 @@ type Tuition = {
   monthlyFee: number;
   daysPerWeek: number;
   bannerImage?: string;
+  bannerUrl?: string;
   description?: string;
   tutorName?: string;
   tutorEmail?: string;
+  tutorPlan?: string;
   createdAt?: string;
 };
 
@@ -36,6 +39,9 @@ export default function TuitionDetailsClient({ tuition }: Props) {
     | undefined;
 
   const isStudent = user?.role === "student";
+
+  // Older records store the banner in `bannerImage`, newer posts in `bannerUrl`.
+  const bannerImage = tuition.bannerImage || tuition.bannerUrl;
 
   const [phone, setPhone] = useState("");
   const [schedule, setSchedule] = useState("");
@@ -61,12 +67,16 @@ export default function TuitionDetailsClient({ tuition }: Props) {
     setSuccess(false);
 
     if (!isStudent) {
-      setMessage("Only logged-in students can apply for this tuition.");
+      const notice = "Only logged-in students can apply for this tuition.";
+      setMessage(notice);
+      toast.error(notice);
       return;
     }
 
     if (!phone.trim() || !schedule.trim()) {
-      setMessage("Please complete all required fields.");
+      const notice = "Please complete all required fields.";
+      setMessage(notice);
+      toast.error(notice);
       return;
     }
 
@@ -78,7 +88,9 @@ export default function TuitionDetailsClient({ tuition }: Props) {
       const token = tokenResult.data?.token;
 
       if (!token) {
-        setMessage("Your login session is not valid. Please sign in again.");
+        const notice = "Your login session is not valid. Please sign in again.";
+        setMessage(notice);
+        toast.error(notice);
         return;
       }
 
@@ -99,12 +111,17 @@ export default function TuitionDetailsClient({ tuition }: Props) {
       const result = await response.json();
 
       if (!response.ok) {
-        setMessage(result.message || "Unable to submit your application.");
+        const notice = result.message || "Unable to submit your application.";
+        setMessage(notice);
+        toast.error(notice);
         return;
       }
 
       setSuccess(true);
       setMessage(
+        result.message || "Your application has been submitted successfully!"
+      );
+      toast.success(
         result.message || "Your application has been submitted successfully!"
       );
 
@@ -114,6 +131,7 @@ export default function TuitionDetailsClient({ tuition }: Props) {
     } catch (error) {
       console.error("Application Error:", error);
       setMessage("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -141,10 +159,10 @@ export default function TuitionDetailsClient({ tuition }: Props) {
       <div className="mx-auto max-w-7xl px-5 py-8 lg:px-8 lg:py-12">
         {/* Hero */}
         <section className="relative isolate overflow-hidden rounded-[2rem] bg-slate-950 shadow-2xl shadow-indigo-950/10">
-          {tuition.bannerImage ? (
+          {bannerImage ? (
             <div
               className="absolute inset-0 -z-20 bg-cover bg-center"
-              style={{ backgroundImage: `url("${tuition.bannerImage}")` }}
+              style={{ backgroundImage: `url("${bannerImage}")` }}
             />
           ) : null}
 
@@ -282,9 +300,19 @@ export default function TuitionDetailsClient({ tuition }: Props) {
                 </div>
 
                 <div className="min-w-0">
-                  <h3 className="text-lg font-bold text-slate-900">
-                    {tuition.tutorName || "MentorLagbe Tutor"}
-                  </h3>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="text-lg font-bold text-slate-900">
+                      {tuition.tutorName || "MentorLagbe Tutor"}
+                    </h3>
+
+                    {tuition.tutorPlan === "pro" && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-indigo-600 px-2.5 py-0.5 text-[11px] font-bold text-white">
+                        <span aria-hidden="true">✓</span>
+                        Verified Pro Tutor
+                      </span>
+                    )}
+                  </div>
+
                   <p className="mt-1 text-sm text-slate-500">
                     Tuition provider · {tuition.subject}
                   </p>
@@ -327,7 +355,7 @@ export default function TuitionDetailsClient({ tuition }: Props) {
                       this tuition.
                     </p>
                     <Link
-                      href="/login"
+                      href="/sign-in"
                       className="mt-4 flex w-full justify-center rounded-xl bg-indigo-700 px-4 py-3 text-sm font-bold text-white transition hover:bg-indigo-800"
                     >
                       Sign in to continue

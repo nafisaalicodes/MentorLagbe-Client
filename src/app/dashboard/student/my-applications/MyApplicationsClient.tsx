@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 
 const API_URL =
@@ -150,12 +151,16 @@ export default function MyApplicationsPage() {
           (application) => application._id !== applicationId
         )
       );
+
+      toast.success(result.message || "Application cancelled successfully");
     } catch (err) {
-      setError(
+      const message =
         err instanceof Error
           ? err.message
-          : "Cancellation failed."
-      );
+          : "Cancellation failed.";
+
+      setError(message);
+      toast.error(message);
     } finally {
       setCancelId(null);
     }

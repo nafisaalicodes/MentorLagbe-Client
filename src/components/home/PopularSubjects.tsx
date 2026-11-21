@@ -17,36 +17,42 @@ const subjects = [
   {
     icon: Calculator,
     name: "Mathematics",
+    filter: "Mathematics",
     classes: "Class 1–12 & University",
     tutors: 120,
   },
   {
     icon: Atom,
     name: "Physics",
+    filter: "Physics",
     classes: "Class 6–12 & HSC",
     tutors: 95,
   },
   {
     icon: FlaskConical,
     name: "Chemistry",
+    filter: "Chemistry",
     classes: "Class 9–12 & University",
     tutors: 80,
   },
   {
     icon: Languages,
     name: "English & Literature",
+    filter: "English",
     classes: "All Levels",
     tutors: 110,
   },
   {
     icon: Code2,
     name: "Programming & ICT",
+    filter: "Programming",
     classes: "Class 9–12 & CSE",
     tutors: 70,
   },
   {
     icon: BookOpen,
     name: "IELTS Preparation",
+    filter: "IELTS",
     classes: "All Ages",
     tutors: 55,
   },
@@ -71,7 +77,7 @@ export default function PopularSubjects() {
             variant="outline"
             className="shrink-0 rounded-full gap-1.5"
             nativeButton={false}
-            render={<Link href="/browse-tuitions" />}
+            render={<Link href="/tuitions" />}
           >
             View all categories
             <ArrowRight className="w-3.5 h-3.5" />
@@ -79,10 +85,10 @@ export default function PopularSubjects() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {subjects.map(({ icon: Icon, name, classes, tutors }) => (
+          {subjects.map(({ icon: Icon, name, filter, classes, tutors }) => (
             <Link
               key={name}
-              href={`/browse-tuitions?subject=${encodeURIComponent(name)}`}
+              href={`/tuitions?subject=${encodeURIComponent(filter)}`}
               className="no-underline group"
             >
               <Card className="hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
