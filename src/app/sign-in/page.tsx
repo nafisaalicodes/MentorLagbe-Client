@@ -7,7 +7,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+
 import { authClient } from "@/lib/auth-client";
+import { apiFetch } from "@/lib/api";
 import BrandPanel from "@/components/auth/BrandPanel";
 
 export default function SignInPage() {
@@ -18,7 +20,9 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSignin = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSignin = async (
+    e: FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
 
     if (!email.trim() || !password) {
@@ -36,63 +40,53 @@ export default function SignInPage() {
       });
 
       if (error) {
-        toast.error(error.message || "Invalid email or password");
+        toast.error(
+          error.message || "Invalid email or password"
+        );
         return;
       }
 
-      // Step 2: Get JWT token from Better Auth
-      const { data: tokenData, error: tokenError } =
-        await authClient.token();
+      // Step 2: Get the logged-in session
+      const { data: sessionData, error: sessionError } =
+        await authClient.getSession();
 
-      if (tokenError || !tokenData?.token) {
-        toast.error("Login successful, but token retrieval failed");
+      if (sessionError || !sessionData?.user) {
+        toast.error(
+          "Login successful, but session could not be retrieved"
+        );
         return;
       }
 
-      const token = tokenData.token;
+      // Step 3: Get user role
+      const role = sessionData.user.role;
 
-      // Step 3: Test protected backend API
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/protected`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      // Step 4: Test protected API using apiFetch
+      await apiFetch("/api/protected", {
+        method: "GET",
+      });
 
-      if (!response.ok) {
-        toast.error("Could not access protected API");
-        return;
+      // Step 5: Login successful
+      toast.success("Login successful!");
+
+      // Step 6: Redirect according to role
+      if (role === "tutor") {
+        router.replace("/dashboard/tutor");
+      } else if (role === "admin") {
+        router.replace("/dashboard/admin");
+      } else {
+        router.replace("/dashboard/student");
       }
 
-     // Step 4: Get logged-in user role
-const { data: sessionData, error: sessionError } =
-  await authClient.getSession();
+      router.refresh();
 
-if (sessionError || !sessionData?.user) {
-  toast.error("Could not retrieve user information");
-  return;
-}
-
-const role = sessionData.user.role;
-
-// Redirect according to user role
-toast.success("Login successful!");
-
-if (role === "tutor") {
-  router.replace("/dashboard/tutor");
-} else if (role === "admin") {
-  router.replace("/dashboard/admin");
-} else {
-  router.replace("/dashboard/student");
-}
-
-router.refresh();
     } catch (error: unknown) {
       console.error("Signin Error:", error);
-      toast.error("Something went wrong. Please try again.");
+
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -103,10 +97,11 @@ router.refresh();
       <div className="grid min-h-[calc(100vh-68px)] lg:grid-cols-2">
         <BrandPanel />
 
-        {/* Form */}
+        {/* Sign In Form */}
         <div className="flex items-center justify-center bg-card px-5 py-14 sm:px-8">
           <div className="w-full max-w-[420px]">
-            {/* Compact logo (small screens) */}
+
+            {/* Compact Logo */}
             <Link
               href="/"
               className="mb-10 flex items-center gap-2.5 lg:hidden"
@@ -118,6 +113,7 @@ router.refresh();
                 height={36}
                 className="h-9 w-9 object-contain"
               />
+
               <span className="text-lg font-extrabold tracking-tight text-heading">
                 Mentor<span className="text-primary">Lagbe</span>
               </span>
@@ -135,7 +131,11 @@ router.refresh();
               Enter your details to continue to MentorLagbe.
             </p>
 
-            <form onSubmit={handleSignin} className="mt-8 space-y-5">
+            <form
+              onSubmit={handleSignin}
+              className="mt-8 space-y-5"
+            >
+              {/* Email */}
               <div>
                 <label
                   htmlFor="email"
@@ -157,6 +157,7 @@ router.refresh();
                 />
               </div>
 
+              {/* Password */}
               <div>
                 <label
                   htmlFor="password"
@@ -180,9 +181,13 @@ router.refresh();
 
                   <button
                     type="button"
-                    onClick={() => setShowPassword((v) => !v)}
+                    onClick={() =>
+                      setShowPassword((v) => !v)
+                    }
                     aria-label={
-                      showPassword ? "Hide password" : "Show password"
+                      showPassword
+                        ? "Hide password"
+                        : "Show password"
                     }
                     className="absolute inset-y-0 right-0 flex w-12 items-center justify-center text-body transition-colors hover:text-primary"
                   >
@@ -195,6 +200,7 @@ router.refresh();
                 </div>
               </div>
 
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={loading}
@@ -217,6 +223,7 @@ router.refresh();
                 Sign up
               </Link>
             </p>
+
           </div>
         </div>
       </div>
